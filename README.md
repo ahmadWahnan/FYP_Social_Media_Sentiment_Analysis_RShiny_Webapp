@@ -16,7 +16,6 @@ In acknowledging the existing work in the field of sentiment analysis, this proj
 Overall, this report aims to provide a comprehensive overview of the proposed web application for sentiment analysis of social media data, and to demonstrate its potential value and feasibility as a tool for companies to understand and improve the perception of their products or services among their customers.
 
 # Objectives
-
 1. Determine the overall sentiment of customers towards the company's product or service: This objective involves analyzing the language used by customers in their social media posts and determining whether the sentiment is positive, negative, or neutral. This can be measured by calculating the percentage of positive, negative, and neutral posts, as well as by tracking changes in sentiment over time.
 
 2. Identify common themes or issues in customer feedback: By analyzing the content of social media posts, the webapp can identify common themes or issues that are frequently mentioned by customers. This can help the company identify areas where it may need to improve its product or service.
@@ -28,7 +27,7 @@ Overall, this report aims to provide a comprehensive overview of the proposed we
 5. Increase customer satisfaction: By using the insights gained through social media sentiment analysis, the company can take steps to improve its product or service, leading to increased customer satisfaction. This can be measured through customer satisfaction surveys or other metrics.
 
 # Literature Review
-# Sentiment Analysis and History
+## Sentiment Analysis and History
 Sentiment analysis, also known as opinion mining, is the process of extracting subjective information from text data. It aims to identify the polarity of text, whether it is positive, negative, or neutral. The history of sentiment analysis can be traced back to the 1960s, where researchers focused on developing methods to extract subjective information from text.
 
 Early implementation of sentiment analysis was mainly based on rule-based approaches, which used dictionaries and lists of words with pre-defined polarity to classify text as positive or negative. These methods had limited accuracy and required significant manual effort to create and maintain the dictionaries and lists.
