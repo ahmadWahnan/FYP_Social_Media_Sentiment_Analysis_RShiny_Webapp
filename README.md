@@ -1,12 +1,18 @@
 # Product-Oriented Social Media Sentiment Analysis Webapp
-
+The purpose of this web application is to perform sentiment analysis of social media data to determine the overall sentiment of customers towards a company's product or service, and identify common themes or issues in customer feedback. This project aims to provide companies with a valuable tool for understanding and improving the perception of their products or services among their customers
 
 # Abstract
 
 
 
 # Introduction
+The subject of this proposal is a potential development of a web application for performing sentiment analysis of social media data to determine the overall sentiment of customers towards a company's product or service, and identify common themes or issues in customer feedback. This project aims to provide companies with a valuable tool for understanding and improving the perception of their products or services among their customers.
 
+The report is structured as follows: The literature review section provides an overview of the existing research and approaches to sentiment analysis, as well as the relevant technology and tools used in the proposed web application. The problem statement section outlines the motivation and rationale for the project, including the gap in the current market and the potential benefits of the proposed web application. The methodology section outlines the approach and steps taken to develop the web application, including the data collection and pre-processing, storage, analysis, and visualization components. The system design and analysis section contains the interface design, functional and non-functional requirements, and overall system architecture of the proposed web application.
+
+In acknowledging the existing work in the field of sentiment analysis, this project builds upon and extends previous research by incorporating the latest technology and tools, and applying them to the specific context of social media data from multiple platforms (Twitter, Facebook, and Instagram). The scope of this project is limited to the development and evaluation of the proposed web application, and does not include any broader market analysis or business strategy recommendations. The project schedule for the development of the web application is outlined in the methodology section.
+
+Overall, this report aims to provide a comprehensive overview of the proposed web application for sentiment analysis of social media data, and to demonstrate its potential value and feasibility as a tool for companies to understand and improve the perception of their products or services among their customers.
 
 # Objectives
 
