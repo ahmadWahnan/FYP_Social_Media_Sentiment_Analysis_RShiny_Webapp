@@ -117,6 +117,9 @@ The data management page will allow users to view, edit, and delete the data tha
 
 The settings page will allow users to configure the app's settings, such as the data sources to be collected from and the frequency of data collection. Users will also be able to change their password and logout from the app on this page.
 
+### Current Interface Design (Subject to Change)
+<img width="961" alt="FYP_webapp_frontend" src="https://user-images.githubusercontent.com/101826903/208519764-eabe4c3d-b9c2-448a-be75-edc652955993.png">
+
 ## System Design
 The proposed web application will be built using a combination of R, Shiny, and MySQL. R will be used as the primary programming language for the app, with Shiny providing the framework for building interactive web applications. MySQL will be used as the database management system for storing and analyzing the collected data.
 
