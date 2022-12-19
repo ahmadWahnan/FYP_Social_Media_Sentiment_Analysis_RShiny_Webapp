@@ -28,6 +28,19 @@ Overall, this report aims to provide a comprehensive overview of the proposed we
 5. Increase customer satisfaction: By using the insights gained through social media sentiment analysis, the company can take steps to improve its product or service, leading to increased customer satisfaction. This can be measured through customer satisfaction surveys or other metrics.
 
 # Literature Review
+# Sentiment Analysis and History
+Sentiment analysis, also known as opinion mining, is the process of extracting subjective information from text data. It aims to identify the polarity of text, whether it is positive, negative, or neutral. The history of sentiment analysis can be traced back to the 1960s, where researchers focused on developing methods to extract subjective information from text.
+
+Early implementation of sentiment analysis was mainly based on rule-based approaches, which used dictionaries and lists of words with pre-defined polarity to classify text as positive or negative. These methods had limited accuracy and required significant manual effort to create and maintain the dictionaries and lists.
+
+Over time, the use of sentiment analysis has increased significantly, as it has become an important tool in various industries. It has been used in customer service to identify customer feedback and complaints, in market research to understand consumer sentiment towards products and services, and in social media to track public opinion about events, brands, and individuals.
+
+The increase in relevancy of sentiment analysis can be attributed to advances in natural language processing (NLP) and machine learning. NLP techniques, such as stemming and lemmatization, have been used to pre-process text data and improve the accuracy of sentiment analysis. Machine learning algorithms, such as support vector machines and decision trees, have been used to build models that can classify text as positive or negative.
+
+In recent years, there has been a significant advancement in sentiment analysis, with the development of deep learning algorithms. These algorithms have achieved state-of-the-art results in various NLP tasks, including sentiment analysis. They have the ability to learn complex patterns and relationships in text data, leading to improved accuracy and robustness.
+
+In conclusion, sentiment analysis has come a long way since its early implementation, and its relevance has increased significantly over time due to advances in NLP and machine learning. Today, it is widely used in various industries to extract subjective information from text data and understand the sentiments of people. With the advancement of deep learning algorithms, it is expected that the accuracy and robustness of sentiment analysis will continue to improve in the future.
+
 ## Pre-existing Sentiment Analysis Tools and Packages in R Language
 R programming is a popular language for data analysis and has a variety of packages, tools and resources available for performing sentiment analysis of social media text. In this review, we will explore some of the most commonly used options and compare their accuracy, speed, and customization options with packages available in Python.
 
@@ -60,9 +73,7 @@ In comparison with frameworks available in Python, R web application frameworks 
 
 Overall, Shiny and plumber are two popular web application frameworks for R programming that can be used for sentiment analysis of social media text. Both frameworks have their own strengths and weaknesses, and which one is the best choice will depend on the specific needs and goals of the user.
 
-## Pre-existing Sentiment Analysis Services in Comparison to Self-Development
-Sentiment analysis, also known as opinion mining, is the process of identifying and extracting subjective information from text data. It involves analyzing the language and tone of customer feedback to determine whether the overall sentiment is positive, negative, or neutral. This type of analysis is increasingly being used by businesses to monitor and understand customer sentiment towards their products or services, as it allows them to identify common themes or issues in customer feedback and take corrective action if necessary.
-
+## Pre-Existing Sentiment Analysis Services in Comparison to Self-Development
 There are several pre-existing sentiment analysis services available for businesses to use. One such service is IBM Watson Tone Analyzer, which uses natural language processing and machine learning algorithms to analyze text data and identify the sentiment and tone of the language used. This service is implemented through an API, which allows businesses to integrate it into their existing systems and processes. It has a number of advantages, including its ability to analyze a large volume of data quickly and accurately, and its ability to identify multiple tones within a single piece of text. However, it also has some limitations, including its reliance on accurate input data and its inability to accurately analyze sarcasm or irony.
 
 Another popular sentiment analysis service is Google Cloud Natural Language, which uses machine learning algorithms to analyze text data and identify the sentiment and tone of the language used. This service is implemented through an API, which allows businesses to integrate it into their existing systems and processes. It has a number of advantages, including its ability to analyze a large volume of data quickly and accurately, and its ability to identify multiple tones within a single piece of text. However, it also has some limitations, including its reliance on accurate input data and its inability to accurately analyze sarcasm or irony.
