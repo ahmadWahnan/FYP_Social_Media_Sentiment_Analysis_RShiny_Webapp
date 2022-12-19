@@ -5,6 +5,7 @@ The purpose of this web application is to perform sentiment analysis of social m
 
 
 
+
 # Introduction
 The subject of this proposal is a potential development of a web application for performing sentiment analysis of social media data to determine the overall sentiment of customers towards a company's product or service, and identify common themes or issues in customer feedback. This project aims to provide companies with a valuable tool for understanding and improving the perception of their products or services among their customers.
 
@@ -27,7 +28,54 @@ Overall, this report aims to provide a comprehensive overview of the proposed we
 5. Increase customer satisfaction: By using the insights gained through social media sentiment analysis, the company can take steps to improve its product or service, leading to increased customer satisfaction. This can be measured through customer satisfaction surveys or other metrics.
 
 # Literature Review
+## Pre-existing Sentiment Analysis Tools and Packages in R Language
+R programming is a popular language for data analysis and has a variety of packages, tools and resources available for performing sentiment analysis of social media text. In this review, we will explore some of the most commonly used options and compare their accuracy, speed, and customization options with packages available in Python.
 
+One popular package for sentiment analysis in R is the "sentimentr" package, developed by Tyler Rinker. This package uses lexical dictionaries to classify the sentiment of text, with options for adjusting the intensity of sentiment and handling negation. It also includes functions for extracting sentiment from social media platforms such as Twitter and Reddit. One advantage of sentimentr is its simplicity and speed, as it relies on pre-defined dictionaries rather than machine learning algorithms. However, its accuracy may be limited by the fixed nature of the dictionaries and its inability to handle more complex language.
+
+Another option in R is the "syuzhet" package, developed by Tyler Rinker and Matthew J. Jockers. This package uses machine learning algorithms to classify the sentiment of text and includes functions for extracting sentiment from various sources including novels and movies. One advantage of syuzhet is its ability to handle more complex language and its higher level of accuracy compared to sentimentr. However, it may be slower due to the use of machine learning algorithms and may require more customization and data preparation.
+
+In comparison to these packages in R, Python has a number of options for sentiment analysis including the "TextBlob" library and the "Vader" library. TextBlob uses machine learning algorithms and a pre-defined lexicon to classify the sentiment of text, with the option for custom training. It also includes functions for various natural language processing tasks such as lemmatization and part-of-speech tagging. One advantage of TextBlob is its simplicity and ease of use, however it may not be as accurate as more sophisticated machine learning approaches.
+
+Vader, developed by C.J. Hutto and Eric Gilbert, is a rule-based sentiment analysis tool specifically designed for social media text. It uses a combination of lexical dictionaries and rules to classify the sentiment of text, with the option for adjusting the intensity of sentiment. One advantage of Vader is its ability to handle social media specific language and its high level of accuracy. However, it may be limited in its ability to handle more complex language and may require more customization for specific domains.
+
+In summary, R and Python both have a range of packages, tools and resources available for performing sentiment analysis of social media text. R packages such as sentimentr and syuzhet offer simplicity and speed, but may have limited accuracy. Python libraries such as TextBlob and Vader offer higher accuracy but may require more customization and data preparation. Ultimately, the best choice will depend on the specific needs and resources of the project.
+
+## Web Application Frameworks available in R Language
+There are several web application frameworks available for R programming that can be used to perform sentiment analysis of social media text. In this literature review, we will discuss the origin, uses, advantages, and disadvantages of these frameworks, as well as their attributes and options in comparison with frameworks available in Python.
+
+One popular web application framework for R is Shiny. Shiny was developed by RStudio and was released in 2012. It allows users to build interactive web applications using R, with the ability to add input widgets such as text boxes, sliders, and drop-down menus, and output widgets such as plots and tables. Shiny applications can be hosted locally or on a server, and can be accessed via a web browser.
+
+Shiny has several advantages for sentiment analysis of social media text. It allows users to easily create interactive visualizations of sentiment data, such as word clouds and bar charts. It also provides a wide range of input and output widgets, which can be used to build user-friendly interfaces for text analysis.
+
+However, Shiny also has some disadvantages. It can be difficult for users with limited programming experience to build complex applications, and the coding can be time-consuming. Additionally, Shiny applications can be slow to load, especially when dealing with large datasets.
+
+Another web application framework for R is plumber. Plumber was developed by RStudio and was released in 2016. It allows users to build REST APIs (representational state transfer application programming interfaces) using R, which can be used to access sentiment analysis functions and data from other applications. Plumber APIs can be hosted locally or on a server, and can be accessed via HTTP requests.
+
+Plumber has several advantages for sentiment analysis of social media text. It allows users to easily create APIs for text analysis functions, which can be accessed by other applications. It also provides a simple syntax for creating and testing APIs, which can be useful for users with limited programming experience.
+
+However, plumber also has some disadvantages. It does not provide as many input and output widgets as Shiny, so it may not be as user-friendly for building interactive applications. Additionally, plumber APIs may not be as efficient as other options for handling large datasets.
+
+In comparison with frameworks available in Python, R web application frameworks have some advantages and disadvantages. On the one hand, R frameworks such as Shiny and plumber provide specific functions and packages for sentiment analysis, which may be more convenient for users who are already familiar with R. On the other hand, Python frameworks such as Flask and Django may have a larger user base and more resources available for learning and development.
+
+Overall, Shiny and plumber are two popular web application frameworks for R programming that can be used for sentiment analysis of social media text. Both frameworks have their own strengths and weaknesses, and which one is the best choice will depend on the specific needs and goals of the user.
+
+## Web Application Frameworks available in R Language
+Sentiment analysis, also known as opinion mining, is the process of identifying and extracting subjective information from text data. It involves analyzing the language and tone of customer feedback to determine whether the overall sentiment is positive, negative, or neutral. This type of analysis is increasingly being used by businesses to monitor and understand customer sentiment towards their products or services, as it allows them to identify common themes or issues in customer feedback and take corrective action if necessary.
+
+There are several pre-existing sentiment analysis services available for businesses to use. One such service is IBM Watson Tone Analyzer, which uses natural language processing and machine learning algorithms to analyze text data and identify the sentiment and tone of the language used. This service is implemented through an API, which allows businesses to integrate it into their existing systems and processes. It has a number of advantages, including its ability to analyze a large volume of data quickly and accurately, and its ability to identify multiple tones within a single piece of text. However, it also has some limitations, including its reliance on accurate input data and its inability to accurately analyze sarcasm or irony.
+
+Another popular sentiment analysis service is Google Cloud Natural Language, which uses machine learning algorithms to analyze text data and identify the sentiment and tone of the language used. This service is implemented through an API, which allows businesses to integrate it into their existing systems and processes. It has a number of advantages, including its ability to analyze a large volume of data quickly and accurately, and its ability to identify multiple tones within a single piece of text. However, it also has some limitations, including its reliance on accurate input data and its inability to accurately analyze sarcasm or irony.
+
+Another sentiment analysis service is Microsoft Azure Text Analytics, which uses machine learning algorithms to analyze text data and identify the sentiment and tone of the language used. This service is implemented through an API, which allows businesses to integrate it into their existing systems and processes. It has a number of advantages, including its ability to analyze a large volume of data quickly and accurately, and its ability to identify multiple tones within a single piece of text. However, it also has some limitations, including its reliance on accurate input data and its inability to accurately analyze sarcasm or irony.
+
+There are several advantages to using pre-existing sentiment analysis tools for businesses. One advantage is that these tools are generally easy to use, requiring little or no programming knowledge. They also typically offer a variety of customization options, allowing businesses to tailor the tool to their specific needs. In addition, these tools often offer real-time analysis, providing businesses with instant insights into customer sentiment.
+
+However, there are also some disadvantages to using pre-existing sentiment analysis tools. One disadvantage is that these tools can be expensive, especially for businesses that require a large amount of analysis. In addition, these tools may not always be accurate, as they rely on machine learning algorithms that can sometimes make mistakes.
+
+Another option for businesses is to develop their own social media sentiment analysis web application for a similar purpose. While this option may require more time and resources, it can offer several advantages. One advantage is that businesses have complete control over the development and customization of the tool, allowing them to tailor the tool to their specific needs. In addition, developing a custom tool can often be more cost-effective in the long run, especially for businesses that require a large amount of analysis.
+
+In conclusion, businesses have several options for performing sentiment analysis, including using pre-existing tools or developing their own custom tool. Each option has its own set of advantages and disadvantages, and the best option will depend on the specific needs and resources of the business.
 
 # Problem Statements
 1. The company has a clear understanding of how customers feel about its product or service, and can use this information to make informed decisions about how to improve and market its offerings. **The company lacks a reliable way to track and analyze customer sentiment on social media. As a result, it is unable to accurately gauge how customers feel about its product or service, and may be missing out on valuable insights**. Creating a social media sentiment analysis webapp that allows the company to track and analyze customer sentiment on social media in real-time. This will enable the company to identify trends and patterns in customer feedback, identify common themes or issues, and respond quickly to potential crises or negative events.
