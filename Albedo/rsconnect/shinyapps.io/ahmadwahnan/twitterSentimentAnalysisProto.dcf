@@ -1,0 +1,13 @@
+name: twitterSentimentAnalysisProto
+title: twitterSentimentAnalysisProto
+username:
+account: ahmadwahnan
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7915667
+bundleId: 6652813
+url: https://ahmadwahnan.shinyapps.io/twitterSentimentAnalysisProto/
+when: 1671442086.14378
+lastSyncTime: 1671442086.14378
+asMultiple: FALSE
+asStatic: FALSE

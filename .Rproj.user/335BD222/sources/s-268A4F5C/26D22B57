@@ -1,0 +1,26 @@
+{
+    "id": "26D22B57",
+    "path": "~/Rheindottir/Albedo/server.R",
+    "project_path": "Albedo/server.R",
+    "type": "r_source",
+    "hash": "2566073799",
+    "contents": "",
+    "dirty": true,
+    "created": 1671440401999.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "190,112",
+        "scrollLine": "179"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1671448919,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1671458299459,
+    "read_only": false,
+    "read_only_alternatives": []
+}

@@ -1,0 +1,408 @@
+#===============================================================================
+# Setup
+#===============================================================================
+
+# Installing package if not already installed 
+EnsurePackage<-function(x){
+  x <- as.character(x)
+  if (!require(x,character.only=TRUE)){
+    install.packages(pkgs=x,repos="https://mran.microsoft.com/")
+    require(x,character.only=TRUE)
+  }
+}
+
+#Identifying packages required  
+PrepareTwitter<-function(){
+  EnsurePackage("rtweet")
+  EnsurePackage("stringr")
+  EnsurePackage("sentimentr")
+  EnsurePackage("textclean")
+  EnsurePackage("ggplot2")
+  EnsurePackage("RColorBrewer")
+  EnsurePackage("hrbrthemes")
+  EnsurePackage("vader")
+  EnsurePackage("schrute")
+  EnsurePackage("dplyr")
+  EnsurePackage("SentimentAnalysis")
+  EnsurePackage("SnowballC")
+}
+
+# Packages and Purpose
+library(shiny)             # Shiny App Library
+library(rtweet)            # Twitter data extraction
+library(stringr)           # String data pre-processing
+library(sentimentr)        # Speed optimized valence shifter augmented dictionary lookup and data augmentation
+library(textclean)         # Text augmentation
+library(ggplot2)           # Data Visualization
+library(RColorBrewer)      # Nice data visualization color palette
+library(hrbrthemes)        # Nice DV themes
+library(vader)             # Social-Media-oriented rule based valence aware dictionary lookup
+library(schrute)           # ditto above but output in data frame
+library(dplyr)             # Data manipulation
+library(SentimentAnalysis) # Standard dictionary lookup based off dictionaries :- 
+# GI (general inquiry based of Harvard IV), 
+# HE (Henry's Financial), 
+# LEM (Loughran-McDonald Financial), 
+# QDAP
+# Potentially custom business/product oriented lexicon
+library(SnowballC)         # idk why, Shinyapp.io requires this package
+
+
+# Twitter API Credentials and Authentication
+# *currently using rtweet_bot to scrape tweets and bypass(?) rate limits
+# *if API Credentials are reset/revoked, re-input this field!
+api_key <- "MVUHrOfQKKrNvlC7UFofmo8jv"                               # Enter your consumer key
+api_secret <- "aiNVfEcfjBSZ617MLIQI3S7LyNSr3BB75BiRzpIq7mMoZT6mPX"   # Enter your consumer secret
+access_token <- "1109345608689565696-iSZBmSbCm1aAppHI5gT2iVB8giMZn7" # Enter your access token
+access_secret <- "D7ZUD7HAKnW5q6OMekmByGqsdJwEbwLsS5u33zniicTVJ"     # Enter your access secret
+auth <- rtweet_bot(api_key, api_secret, access_token, access_secret)
+
+#===============================================================================
+# Functions
+#===============================================================================
+
+# Tweet cleaning function 
+# edit cleaning parameters here
+clean_tweets <- function(x) {
+  x %>%
+    # Remove URLs
+    str_remove_all(" ?(f|ht)(tp)(s?)(://)(.*)[.|/](.*)") %>%
+    # Remove mentions e.g. "@my_account"
+    str_remove_all("@[[:alnum:]_]{4,}") %>%
+    # Remove hashtags
+    str_remove_all("#[[:alnum:]_]+") %>%
+    # Replace "&" character reference with "and"
+    str_replace_all("&amp;", "and") %>%
+    # Remove puntucation, using a standard character class
+    str_remove_all("[[:punct:]]") %>%
+    # Remove "RT: " from beginning of retweets
+    str_remove_all("^RT:? ") %>%
+    # Replace any newline characters with a space
+    str_replace_all("\\\n", " ") %>%
+    # Make everything lowercase
+    str_to_lower() %>%
+    # Remove any trailing whitespace around the text
+    str_trim("both")
+}
+
+# Tweet word equivalent augmentation/replacement function         
+# edit augmentation parameters here
+augment_tweets <- function(x) {
+  if (inputAugmentEmoji){
+    x <- replace_emoji(x) 
+    x <- replace_non_ascii(x) 
+  }
+  if (inputAugmentEmoticon){
+    x <- replace_emoticon(x) 
+    x <- replace_non_ascii(x) 
+  }
+  if (inputAugmentGrade){
+    x <- replace_grade(x) 
+    x <- replace_non_ascii(x) 
+  }
+  if (inputAugmentInternetSlang){
+    x <- replace_internet_slang(x) 
+    x <- replace_non_ascii(x) 
+  }
+  if (inputAugmentRating){
+    x <- replace_rating(x) 
+    x <- replace_non_ascii(x) 
+  }
+  if (inputAugmentWordElongation){
+    x <- replace_word_elongation(x) 
+    x <- replace_non_ascii(x) 
+  }
+}
+
+# Legacy Data Input
+#====================================
+# Text augmentation parameters
+#-----------------------------
+inputAugmentEmoji <- TRUE
+inputAugmentEmoticon <- TRUE
+inputAugmentGrade <- TRUE
+inputAugmentInternetSlang <- TRUE
+inputAugmentRating <- TRUE
+inputAugmentWordElongation <- TRUE
+
+#===============================================================================
+# SERVER LOGIC
+#===============================================================================
+# Server logic function
+shinyServer(function(input, output){
+  
+  # Begin process once "Analyze" button is pressed
+  observeEvent(input$update,{
+    
+    # Begin progress bar
+    withProgress(message = 'Server Progress', value = 0, {
+      progressSteps <- 9 # number of progress steps
+      
+      # Input Search Parameters
+      incProgress(1/progressSteps, detail = paste("Recieving search input parameters..."))
+      inputKeyword <- input$inputKeyword
+      inputTweetQueryNumber <- input$inputTweetQueryNumber
+      inputMinimumLikes <- input$inputMinimumLikes
+      inputMinimumRetweets <- input$inputMinimumRetweets
+      inputMinimumReplies <- input$inputMinimumReplies
+      inputType <- input$inputType
+      inputLanguage <- input$inputLanguage
+      inputIncludeLinks <- input$inputIncludeLinks
+      inputIncludeReplies <- input$inputIncludeReplies
+      inputIncludeRTS <- input$inputIncludeRTS
+      
+      # Augment search query based on parameters given
+      incProgress(1/progressSteps, detail = paste("Augment search query based on parameters given..."))
+      searchQuery <- inputKeyword
+      searchQuery <- paste(searchQuery,"")
+      
+      if (inputMinimumLikes > 0) {
+        searchQuery <- paste(searchQuery," min_faves:", inputMinimumLikes, sep = "")
+      }
+      if (inputMinimumRetweets > 0) {
+        searchQuery <- paste(searchQuery," min_retweets:", inputMinimumRetweets, sep = "")
+      }
+      if (inputMinimumReplies > 0) {
+        searchQuery <- paste(searchQuery," min_replies:", inputMinimumReplies, sep = "")
+      }
+      if (!inputIncludeLinks) {
+        searchQuery <- paste(searchQuery,"-filter:links")
+      }
+      if (!inputIncludeReplies) {
+        searchQuery <- paste(searchQuery,"-filter:replies")
+      }
+      
+      # Retrieving twitter query based of parameters given and append into main data frame
+      incProgress(1/progressSteps, detail = paste("Extracting tweets from Twitter API..."))
+      twitterQueryDataframe <- search_tweets(searchQuery,                  # Search term for tweets augmented from 'inputKeyword'
+                                             n = inputTweetQueryNumber,    # Number of tweets to retrieve e.g. 50
+                                             result_type = inputType,      # Type of tweets e.g. recent, popular, mixed
+                                             lang = inputLanguage,         # Tweet Language e.g. en
+                                             include_rts = inputIncludeRTS,# Include re tweets e.g. TRUE, FALSE
+                                             token = auth,                 # Authentication token bot
+                                             parse = TRUE,                 # Tidy data frame
+                                             retryonratelimit = TRUE,      # Wait until rate limit refresh to retrieve tweets
+                                             verbose = TRUE
+      )
+      
+      # Create working dataframe and drop irrelevant columns
+      incProgress(1/progressSteps, detail = paste("Creating working dataframe and dropping irrelevant columns..."))
+      twitterDataframe <- subset(twitterQueryDataframe, select = c(created_at,text,favorite_count,retweet_count))
+      twitterDataframe['engagement'] <- twitterQueryDataframe$favorite_count+twitterQueryDataframe$retweet_count
+      
+      twitterDataframe1 <- twitterDataframe
+      twitterDataframe2 <- twitterDataframe
+      
+      # Split created_at to date and time
+      #finalTwitterDataframe$created_at <- str_split_1(finalTwitterDataframe$created_at," ")
+      
+      # Output raw extracted tweets
+      output$table1 <- DT::renderDataTable(
+        twitterDataframe1,
+        options = list(paging = FALSE)
+      )
+      
+      # Call function to clean twitter text
+      twitterDataframe2$text <- clean_tweets(twitterDataframe2$text)
+      
+      # Call function to augment twitter text
+      twitterDataframe2$text <- augment_tweets(twitterDataframe2$text)
+      
+      # Output cleaned tweets
+      output$table2 <- DT::renderDataTable(
+        twitterDataframe2,
+        options = list(paging = FALSE)
+      )
+      
+      # Create sentimentr library results dataframe; get_sentences to limit character vector
+      incProgress(1/progressSteps, detail = paste("Creating sentimentr results dataframe..."))
+      sentimentrDF <- sentiment(get_sentences(twitterDataframe2$text))
+      
+      # Create sentimentAnalysis library results dataframe
+      incProgress(1/progressSteps, detail = paste("Creating sentimentAnalysis results dataframe"))
+      sentimentAnalysisDF <- analyzeSentiment(twitterDataframe2$text)
+      
+      # Create sentimentr library emotion results dataframe; get_sentences to limit character vector
+      incProgress(1/progressSteps, detail = paste("Creating sentimentr emotion results dataframe"))
+      sentimentrEmotionDF <- emotion(get_sentences(twitterDataframe2$text))
+      
+      # Create VADER library results dataframe
+      # *uses raw tweet due to ability to recognize social media slangs, emojis and lexicon
+      incProgress(1/progressSteps, detail = paste("Creating VADER results dataframe"))
+      vaderDF <- vader_df(twitterDataframe1$text)
+      
+      # Output raw extracted tweets
+      incProgress(1/progressSteps, detail = paste("Visualising results"))
+      output$tableRaw <- DT::renderDataTable(
+        twitterDataframe1,
+        options = list(paging = FALSE)
+      )
+      
+      # Output cleaned tweets
+      output$tableClean <- DT::renderDataTable(
+        twitterDataframe2,
+        options = list(paging = FALSE)
+      )
+      
+      # Output VADER processed tweets
+      output$tableVADER <- DT::renderDataTable(
+        vaderDF,
+        options = list(paging = FALSE)
+      )
+      
+      # Output sentimentr processed tweets
+      output$tableSentimentr <- DT::renderDataTable(
+        sentimentrDF,
+        options = list(paging = FALSE)
+      )
+      
+      # Output sentimentAnalysis processed tweets
+      output$tableSA <- DT::renderDataTable(
+        sentimentAnalysisDF,
+        options = list(paging = FALSE)
+      )
+      
+      # Output sentimentr Emotion processed tweets
+      output$tableEmotion <- DT::renderDataTable(
+        sentimentrEmotionDF,
+        options = list(paging = FALSE)
+      )
+      
+      # Stacked Sentiment (VADER)
+      #-------------------------------------------------------------------------
+      sentimentType <- c(rep("Negative"),rep("Neutral"),rep("Positive"))
+      value <- c(
+        sum(vaderDF$neg),
+        sum(vaderDF$neu),
+        sum(vaderDF$pos)
+      )
+      visualizeDF <- data.frame(sentimentType,value)
+      
+      # Stacked + percent
+      plotVADER <- ggplot(visualizeDF, aes(fill=sentimentType, y=value, x="")) + 
+        geom_bar(position="stack", stat="identity", fill= c("lightcoral","lemonchiffon","lightblue4")) +
+        ggtitle("Stacked Sentiment Distribution (VADER)") +
+        ylab("Percentage (%)") +
+        scale_fill_discrete(name="Sentiment Type") +
+        coord_flip()
+      
+      output$plotVADER <- renderPlot({plotVADER})
+      
+      # Discrete Sum
+      plotVADER2 <- ggplot(visualizeDF, aes(x=sentimentType, y=value)) + 
+        geom_bar(stat = "identity", fill= c("lightcoral","lemonchiffon","lightblue4")) +
+        ggtitle("Sentiment Distribution (VADER)") +
+        ylab("Count") +
+        scale_fill_discrete(name="Sentiment Type") +
+        coord_flip()
+      
+      output$plotVADER2 <- renderPlot({plotVADER2})
+      
+      # Stacked Sentiment (General Inquiry)
+      #-------------------------------------------------------------------------
+      sentimentType <- c(rep("Negative"),rep("Positive"))
+      value <- c(
+        count(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="joy")]),
+        sum(sentimentAnalysisDF$NegativityGI),
+        sum(sentimentAnalysisDF$PositivityGI)
+      )
+      visualizeDF <- data.frame(sentimentType,value)
+      
+      plotGI <- ggplot(visualizeDF, aes(fill=sentimentType, y=value, x="")) + 
+        geom_bar(position="stack", stat="identity", fill= c("lightcoral","darkolivegreen3")) +
+        ggtitle("Sentiment Distribution (sentimentr)") +
+        ylab("Percentage (%)") +
+        scale_fill_discrete(name="Sentiment Type") +
+        coord_flip()
+      
+      output$plotGI <- renderPlot({plotGI})
+      
+      # Emotion Stacked Bar chart DV
+      #-------------------------------------------------------------------------
+      emotionBin <- c(rep("Positive",8) , rep("Negative",8))
+      emotionType <- rep(c("joy","surprise","anticipation","trust","sadness","anger_negated","disgust_negated","fear_negated","sadness_negated","anger","disgust","fear","joy_negated","surprise_negated","anticipation_negated","trust_negated"),1)
+      value <- c(
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="joy")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="surprise")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="anticipation")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="trust")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="sadness_negated")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="anger_negated")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="disgust_negated")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="fear_negated")]),
+        
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="sadness")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="anger")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="disgust")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="fear")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="joy_negated")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="surprise_negated")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="anticipation_negated")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="trust_negated")])
+      )
+      emoDataset <- data.frame(emotionBin,emotionType,value)
+      
+      plotEmotion <- ggplot(emoDataset, aes(fill=emotionType, y=value, x=emotionBin)) + 
+        geom_bar(position="stack", stat="identity") +
+        ggtitle("Emotion Rating Distribution") +
+        xlab("") +
+        ylab("Rating") +
+        scale_fill_discrete(name="Emotion Type") +
+        coord_flip()
+      
+      output$plotEmotion <- renderPlot({plotEmotion})
+      
+      # Emotion Stacked Bar chart DV
+      #-------------------------------------------------------------------------
+      emotionBin <- c(rep("Positive",4) , rep("Negative",4))
+      emotionType <- rep(c("joy","surprise","anticipation","trust","sadness","anger","disgust","fear"),1)
+      value <- c(
+        sum(sentimentrEmotionDF$emotion_count[which(sentimentrEmotionDF$emotion_type=="joy")]),
+        sum(sentimentrEmotionDF$emotion_count[which(sentimentrEmotionDF$emotion_type=="surprise")]),
+        sum(sentimentrEmotionDF$emotion_count[which(sentimentrEmotionDF$emotion_type=="anticipation")]),
+        sum(sentimentrEmotionDF$emotion_count[which(sentimentrEmotionDF$emotion_type=="trust")]),
+        sum(sentimentrEmotionDF$emotion_count[which(sentimentrEmotionDF$emotion_type=="sadness")]),
+        sum(sentimentrEmotionDF$emotion_count[which(sentimentrEmotionDF$emotion_type=="anger")]),
+        sum(sentimentrEmotionDF$emotion_count[which(sentimentrEmotionDF$emotion_type=="disgust")]),
+        sum(sentimentrEmotionDF$emotion_count[which(sentimentrEmotionDF$emotion_type=="fear")])
+      )
+      emoDataset <- data.frame(emotionBin,emotionType,value)
+      
+      plotEmotion1 <- ggplot(emoDataset, aes(fill=emotionType, y=value, x=emotionBin)) + 
+        geom_bar(position="stack", stat="identity") +
+        ggtitle("Emotion Rating Distribution") +
+        xlab("") +
+        ylab("Rating") +
+        scale_fill_discrete(name="Emotion Type") +
+        coord_flip()
+      
+      output$plotEmotion1 <- renderPlot({plotEmotion1})
+      
+      emotionBin <- c(rep("Negated Negative",4) , rep("Negated Positive",4))
+      emotionType <- rep(c("sadness_negated","anger_negated","disgust_negated","fear_negated","joy_negated","surprise_negated","anticipation_negated","trust_negated"),1)
+      value <- c(
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="sadness_negated")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="anger_negated")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="disgust_negated")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="fear_negated")]),
+        
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="joy_negated")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="surprise_negated")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="anticipation_negated")]),
+        sum(sentimentrEmotionDF$emotion[which(sentimentrEmotionDF$emotion_type=="trust_negated")])
+      )
+      emoDataset <- data.frame(emotionBin,emotionType,value)
+      
+      plotEmotion2 <- ggplot(emoDataset, aes(fill=emotionType, y=value, x=emotionBin)) + 
+        geom_bar(position="stack", stat="identity") +
+        ggtitle("Negated Emotion Rating Distribution") +
+        xlab("") +
+        ylab("Rating") +
+        scale_fill_discrete(name="Emotion Type") +
+        coord_flip()
+      
+      output$plotEmotion2 <- renderPlot({plotEmotion2})
+      
+    })
+  })
+})

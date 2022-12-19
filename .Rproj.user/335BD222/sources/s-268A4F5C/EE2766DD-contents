@@ -1,0 +1,206 @@
+#===============================================================================
+# Setup
+#===============================================================================
+
+# Installing package if not already installed----------------------------------- 
+EnsurePackage<-function(x){
+  x <- as.character(x)
+  if (!require(x,character.only=TRUE)){
+    install.packages(pkgs=x,repos="https://mran.microsoft.com/")
+    require(x,character.only=TRUE)
+  }
+}
+
+# Call multiple EnsurePackages-------------------------------------------------- 
+PrepareTwitter<-function(){
+  EnsurePackage("rtweet")
+  EnsurePackage("stringr")
+  EnsurePackage("sentimentr")
+  EnsurePackage("textclean")
+  EnsurePackage("ggplot2")
+  EnsurePackage("RColorBrewer")
+  EnsurePackage("hrbrthemes")
+  EnsurePackage("vader")
+  EnsurePackage("schrute")
+  EnsurePackage("dplyr")
+  EnsurePackage("SentimentAnalysis")
+  EnsurePackage("SnowballC")
+  EnsurePackage("tidyr")
+}
+
+# Packages and Purpose----------------------------------------------------------
+library(shiny)             # Shiny App Library
+library(rtweet)            # Twitter data extraction
+library(stringr)           # String data pre-processing
+library(sentimentr)        # Speed optimized valence shifter augmented dictionary lookup and data augmentation
+library(textclean)         # Text augmentation
+library(ggplot2)           # Data Visualization
+library(RColorBrewer)      # Nice data visualization color palette
+library(hrbrthemes)        # Nice DV themes
+library(vader)             # Social-Media-oriented rule based valence aware dictionary lookup
+library(schrute)           # ditto above but output in data frame
+library(dplyr)             # Data manipulation
+library(SentimentAnalysis) # Standard dictionary lookup
+library(SnowballC)         # Shinyapp.io requirement to display data(?)
+library(tidyr)
+
+# Twitter API Credentials and Authentication------------------------------------(!)
+# *currently using rtweet_bot to scrape tweets and bypass(?) rate limits
+# *if API Credentials are reset/revoked, re-input this field!
+api_key <- "MVUHrOfQKKrNvlC7UFofmo8jv"                                          # Enter your consumer key
+api_secret <- "aiNVfEcfjBSZ617MLIQI3S7LyNSr3BB75BiRzpIq7mMoZT6mPX"              # Enter your consumer secret
+access_token <- "1109345608689565696-iSZBmSbCm1aAppHI5gT2iVB8giMZn7"            # Enter your access token
+access_secret <- "D7ZUD7HAKnW5q6OMekmByGqsdJwEbwLsS5u33zniicTVJ"                # Enter your access secret
+auth <- rtweet_bot(api_key, api_secret, access_token, access_secret)
+
+#===============================================================================
+# Functions
+#===============================================================================
+
+# Tweet cleaning function 
+# edit cleaning parameters here-------------------------------------------------(!)
+clean_tweets <- function(x) {
+  x %>%
+    # Remove URLs
+    str_remove_all(" ?(f|ht)(tp)(s?)(://)(.*)[.|/](.*)") %>%
+    # Remove mentions e.g. "@my_account"
+    str_remove_all("@[[:alnum:]_]{4,}") %>%
+    # Remove hashtags
+    str_remove_all("#[[:alnum:]_]+") %>%
+    # Replace "&" character reference with "and"
+    str_replace_all("&amp;", "and") %>%
+    # Remove puntucation, using a standard character class
+    str_remove_all("[[:punct:]]") %>%
+    # Remove "RT: " from beginning of retweets
+    str_remove_all("^RT:? ") %>%
+    # Replace any newline characters with a space
+    str_replace_all("\\\n", " ") %>%
+    # Make everything lowercase
+    str_to_lower() %>%
+    # Remove any trailing whitespace around the text
+    str_trim("both")
+}
+
+# Tweet word equivalent augmentation/replacement function         
+# edit augmentation parameters here
+augment_tweets <- function(x) {
+  if (inputAugmentEmoji){
+    x <- replace_emoji(x) 
+    x <- replace_non_ascii(x) 
+  }
+  if (inputAugmentEmoticon){
+    x <- replace_emoticon(x) 
+    x <- replace_non_ascii(x) 
+  }
+  if (inputAugmentGrade){
+    x <- replace_grade(x) 
+    x <- replace_non_ascii(x) 
+  }
+  if (inputAugmentInternetSlang){
+    x <- replace_internet_slang(x) 
+    x <- replace_non_ascii(x) 
+  }
+  if (inputAugmentRating){
+    x <- replace_rating(x) 
+    x <- replace_non_ascii(x) 
+  }
+  if (inputAugmentWordElongation){
+    x <- replace_word_elongation(x) 
+    x <- replace_non_ascii(x) 
+  }
+}
+
+# Legacy Data Input
+#====================================
+# Text augmentation parameters
+#-----------------------------
+inputAugmentEmoji <- TRUE
+inputAugmentEmoticon <- TRUE
+inputAugmentGrade <- TRUE
+inputAugmentInternetSlang <- TRUE
+inputAugmentRating <- TRUE
+inputAugmentWordElongation <- TRUE
+
+# Input Search Parameters
+inputKeyword <- "Avatar 2"
+inputTweetQueryNumber <- 1000
+inputMinimumLikes <- 1
+inputMinimumRetweets <- 1
+inputMinimumReplies <- 1
+inputType <- "recent"
+inputLanguage <- "en"
+inputIncludeLinks <- FALSE
+inputIncludeReplies <- FALSE
+inputIncludeRTS <- FALSE
+
+# Augment search query based on parameters given
+searchQuery <- inputKeyword
+searchQuery <- paste(searchQuery,"")
+
+if (inputMinimumLikes > 0) {
+  searchQuery <- paste(searchQuery," min_faves:", inputMinimumLikes, sep = "")
+}
+if (inputMinimumRetweets > 0) {
+  searchQuery <- paste(searchQuery," min_retweets:", inputMinimumRetweets, sep = "")
+}
+if (inputMinimumReplies > 0) {
+  searchQuery <- paste(searchQuery," min_replies:", inputMinimumReplies, sep = "")
+}
+if (!inputIncludeLinks) {
+  searchQuery <- paste(searchQuery,"-filter:links")
+}
+if (!inputIncludeReplies) {
+  searchQuery <- paste(searchQuery,"-filter:replies")
+}
+
+# Retrieving twitter query based of parameters given and append into main data frame
+twitterQueryDataframe <- search_tweets(searchQuery,                  # Search term for tweets augmented from 'inputKeyword'
+                                       n = inputTweetQueryNumber,    # Number of tweets to retrieve e.g. 50
+                                       result_type = inputType,      # Type of tweets e.g. recent, popular, mixed
+                                       lang = inputLanguage,         # Tweet Language e.g. en
+                                       include_rts = inputIncludeRTS,# Include re tweets e.g. TRUE, FALSE
+                                       token = auth,                 # Authentication token bot
+                                       parse = TRUE,                 # Tidy data frame
+                                       retryonratelimit = TRUE,      # Wait until rate limit refresh to retrieve tweets
+                                       verbose = TRUE
+)
+
+#===============================================================================
+# Data Reduction, Cleaning and Transformation
+#===============================================================================
+# Create main twitter dataframe and drop irrelevant/empty columns
+twitterDF <- subset(twitterQueryDataframe, select = c(created_at,text,favorite_count,retweet_count))
+twitterDF['engagement'] <- twitterQueryDataframe$favorite_count+twitterQueryDataframe$retweet_count
+twitterDF <- twitterDF %>% separate(created_at,c("date","time"), sep = " ")
+
+
+# Output raw extracted tweets
+output$table1 <- DT::renderDataTable(
+  twitterDataframe1,
+  options = list(paging = FALSE)
+)
+
+# Call function to clean twitter text
+twitterDataframe2$text <- clean_tweets(twitterDataframe2$text)
+
+# Call function to augment twitter text
+twitterDataframe2$text <- augment_tweets(twitterDataframe2$text)
+
+# Output cleaned tweets
+output$table2 <- DT::renderDataTable(
+  twitterDataframe2,
+  options = list(paging = FALSE)
+)
+
+# Create sentimentr library results dataframe; get_sentences to limit character vector
+sentimentrDF <- sentiment(get_sentences(twitterDataframe2$text))
+
+# Create sentimentAnalysis library results dataframe
+sentimentAnalysisDF <- analyzeSentiment(twitterDataframe2$text)
+
+# Create sentimentr library emotion results dataframe; get_sentences to limit character vector
+sentimentrEmotionDF <- emotion(get_sentences(twitterDataframe2$text))
+
+# Create VADER library results dataframe
+# *uses raw tweet due to ability to recognize social media slangs, emojis and lexicon
+vaderDF <- vader_df(twitterDataframe1$text)
