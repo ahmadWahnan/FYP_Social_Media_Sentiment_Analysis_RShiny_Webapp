@@ -118,7 +118,20 @@ The interface design for the proposed web application will be clean and user-fri
 The data visualization page will display a range of interactive graphs and charts that allow users to explore the data in greater detail. These visualizations will include bar charts, line graphs, and pie charts, and will be generated using popular visualization libraries such as ggplot2 and plotly. Users will be able to interact with the visualizations by hovering over individual data points, zooming in and out, and filtering the data by specific criteria.
 
 ### Current Interface Design (Subject to Change)
-<img width="961" alt="FYP_webapp_frontend" src="https://user-images.githubusercontent.com/101826903/208519764-eabe4c3d-b9c2-448a-be75-edc652955993.png">
+#### Twitter Trending Tab
+![twitter_trend](https://user-images.githubusercontent.com/101826903/209450348-3c246f2a-2441-4a2f-b1c6-496e9af81c24.png)
+
+#### Twitter Extracted Data Exploration
+![twitter_exploration](https://user-images.githubusercontent.com/101826903/209450357-dc8b8ed3-7f29-4cfb-8734-14c02d236d42.png)
+
+#### Twitter Extracted Data Sentiment Analysis (Aggregate Results)
+![twitter_aggregate](https://user-images.githubusercontent.com/101826903/209450365-42fe9f7f-3832-4b51-8810-eb8e45f3ec39.png)
+
+#### Twitter Interactive Data Visualisation 
+![twitter_interactive](https://user-images.githubusercontent.com/101826903/209450371-12876a98-b431-4a0f-b65b-c3196c983c4f.png)
+
+#### Twitter Data Visualisation Export
+![twitter_export](https://user-images.githubusercontent.com/101826903/209450380-457468b4-5145-4f5c-a29a-1acea36088ff.png)
 
 ## System Design
 The proposed web application will be built using a combination of R, Shiny, and MySQL. R will be used as the primary programming language for the app, with Shiny providing the framework for building interactive web applications. MySQL will be used as the database management system for storing the collected data.
