@@ -128,7 +128,7 @@ The web application will collect data from the social media APIs using the rtwee
 Once the data has been stored in the MySQL database, the web application will use sentiment analysis algorithms to analyze the data and generate data visualizations. These visualizations will be generated using popular R visualization libraries such as ggplot2 and plotly, and will be displayed on the front-end web app using Shiny's interactive plotting functions.
 
 ### System Architecture
-![FYP_System_Architecture_wbg drawio](https://user-images.githubusercontent.com/101826903/208515415-75d950b9-0122-4339-937f-ab523409e022.png)
+![POSMSAWA_system_architecture](https://user-images.githubusercontent.com/101826903/209450071-e8336a80-7bbd-475d-994a-cc6bea33d007.png)
 
 ## Functional Requirements
 The functional requirements for the proposed web application are as follows:
