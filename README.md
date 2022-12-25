@@ -153,21 +153,20 @@ Once the data has been stored in the MySQL database, the web application will us
 ![image](https://user-images.githubusercontent.com/101826903/209470894-b203295c-4944-43d5-97e4-00be859db156.png)
 
 Brief description of each field:
-
-id: This is the primary key for the tweet table, and it is an auto-incrementing integer field.
-tweet_id: This field stores the unique ID of the tweet. It is a BIGINT field (64-bit integer) and cannot be null.
-author_id: This field stores the unique ID of the user who wrote the tweet. It is a BIGINT field (64-bit integer) and cannot be null.
-in_reply_to_user_id: This field stores the unique ID of the user that the tweet is in reply to, if applicable. It is a BIGINT field (64-bit integer) and can be null.
-conversation_id: This field stores the unique ID of the conversation to which the tweet belongs. It is a BIGINT field (64-bit integer) and cannot be null.
-created_at: This field stores the date and time when the tweet was created. It is a DATETIME field and cannot be null.
-lang: This field stores the language of the tweet, as identified by Twitter. It is a VARCHAR field with a maximum length of 10 characters.
-possibly_sensitive: This field stores a boolean value indicating whether the tweet may contain sensitive content. It is a BOOLEAN field.
-reply_settings: This field stores the reply settings for the tweet. It is a VARCHAR field with a maximum length of 255 characters.
-text: This field stores the full text of the tweet. It is a TEXT field and cannot be null.
-retweet_count: This field stores the number of times the tweet has been retweeted. It is an INTEGER field (32-bit integer) and cannot be null.
-reply_count: This field stores the number of replies to the tweet. It is an INTEGER field (32-bit integer) and cannot be null.
-like_count: This field stores the number of likes for the tweet. It is an INTEGER field (32-bit integer) and cannot be null.
-quote_count: This field stores the number of times the tweet has been quoted. It is an INTEGER field (32-bit integer) and cannot be null.
+1. id: This is the primary key for the tweet table, and it is an auto-incrementing integer field.
+2. tweet_id: This field stores the unique ID of the tweet. It is a BIGINT field (64-bit integer) and cannot be null.
+3. author_id: This field stores the unique ID of the user who wrote the tweet. It is a BIGINT field (64-bit integer) and cannot be null.
+4. in_reply_to_user_id: This field stores the unique ID of the user that the tweet is in reply to, if applicable. It is a BIGINT field (64-bit integer) and can be null.
+5. conversation_id: This field stores the unique ID of the conversation to which the tweet belongs. It is a BIGINT field (64-bit integer) and cannot be null.
+6. created_at: This field stores the date and time when the tweet was created. It is a DATETIME field and cannot be null.
+7. lang: This field stores the language of the tweet, as identified by Twitter. It is a VARCHAR field with a maximum length of 10 characters.
+8. possibly_sensitive: This field stores a boolean value indicating whether the tweet may contain sensitive content. It is a BOOLEAN field.
+9. reply_settings: This field stores the reply settings for the tweet. It is a VARCHAR field with a maximum length of 255 characters.
+10. text: This field stores the full text of the tweet. It is a TEXT field and cannot be null.
+11. retweet_count: This field stores the number of times the tweet has been retweeted. It is an INTEGER field (32-bit integer) and cannot be null.
+12. reply_count: This field stores the number of replies to the tweet. It is an INTEGER field (32-bit integer) and cannot be null.
+13. like_count: This field stores the number of likes for the tweet. It is an INTEGER field (32-bit integer) and cannot be null.
+14. quote_count: This field stores the number of times the tweet has been quoted. It is an INTEGER field (32-bit integer) and cannot be null.
 
 ## Functional Requirements
 The functional requirements for the proposed web application are as follows:
