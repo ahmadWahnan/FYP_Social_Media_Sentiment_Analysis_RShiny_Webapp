@@ -150,7 +150,7 @@ Once the data has been stored in the MySQL database, the web application will us
 ![image](https://user-images.githubusercontent.com/101826903/209470674-89cb1079-913e-402e-a919-d878a69aa9d7.png)
 
 ### Entity Relationship Diagram
-![image](https://user-images.githubusercontent.com/101826903/209470894-b203295c-4944-43d5-97e4-00be859db156.png)
+![image](https://user-images.githubusercontent.com/101826903/209476511-085c2805-99bb-4817-a738-987741409389.png)
 
 Brief description of each field:
 1. id: This is the primary key for the tweet table, and it is an auto-incrementing integer field.
