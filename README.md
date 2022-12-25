@@ -141,7 +141,33 @@ The web application will collect data from the social media APIs using the rtwee
 Once the data has been stored in the MySQL database, the web application will use sentiment analysis algorithms to analyze the data and generate data visualizations. These visualizations will be generated using popular R visualization libraries such as ggplot2 and plotly, and will be displayed on the front-end web app using Shiny's interactive plotting functions.
 
 ### System Architecture
-![image](https://user-images.githubusercontent.com/101826903/209470435-d5cc5d41-ab53-45fa-ab1d-f01e0f7e2999.png)
+![image](https://user-images.githubusercontent.com/101826903/209470598-88690423-3559-4069-a09e-63695916a6b7.png)
+
+### Context Diagram
+![image](https://user-images.githubusercontent.com/101826903/209470646-a008fa4c-fd25-475e-82fa-3bda0505dbd9.png)
+
+### Data Flow Diagram
+![image](https://user-images.githubusercontent.com/101826903/209470674-89cb1079-913e-402e-a919-d878a69aa9d7.png)
+
+### Entity Relationship Diagram
+![image](https://user-images.githubusercontent.com/101826903/209470894-b203295c-4944-43d5-97e4-00be859db156.png)
+
+Brief description of each field:
+
+id: This is the primary key for the tweet table, and it is an auto-incrementing integer field.
+tweet_id: This field stores the unique ID of the tweet. It is a BIGINT field (64-bit integer) and cannot be null.
+author_id: This field stores the unique ID of the user who wrote the tweet. It is a BIGINT field (64-bit integer) and cannot be null.
+in_reply_to_user_id: This field stores the unique ID of the user that the tweet is in reply to, if applicable. It is a BIGINT field (64-bit integer) and can be null.
+conversation_id: This field stores the unique ID of the conversation to which the tweet belongs. It is a BIGINT field (64-bit integer) and cannot be null.
+created_at: This field stores the date and time when the tweet was created. It is a DATETIME field and cannot be null.
+lang: This field stores the language of the tweet, as identified by Twitter. It is a VARCHAR field with a maximum length of 10 characters.
+possibly_sensitive: This field stores a boolean value indicating whether the tweet may contain sensitive content. It is a BOOLEAN field.
+reply_settings: This field stores the reply settings for the tweet. It is a VARCHAR field with a maximum length of 255 characters.
+text: This field stores the full text of the tweet. It is a TEXT field and cannot be null.
+retweet_count: This field stores the number of times the tweet has been retweeted. It is an INTEGER field (32-bit integer) and cannot be null.
+reply_count: This field stores the number of replies to the tweet. It is an INTEGER field (32-bit integer) and cannot be null.
+like_count: This field stores the number of likes for the tweet. It is an INTEGER field (32-bit integer) and cannot be null.
+quote_count: This field stores the number of times the tweet has been quoted. It is an INTEGER field (32-bit integer) and cannot be null.
 
 ## Functional Requirements
 The functional requirements for the proposed web application are as follows:
